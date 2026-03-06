@@ -149,6 +149,10 @@ app/
 └── Providers/
     ├── AppServiceProvider.php              # Policies, Gates, Rate limiting
     └── RepositoryServiceProvider.php       # Bind interfaces → implémentations
+
+# plus hors de `app/` :
+resources/
+└── views/                        # Templates Blade pour le dashboard web et formulaires
 ```
 
 ---
