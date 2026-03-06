@@ -8,7 +8,7 @@ API REST complète pour la gestion d'agences immobilières. Authentification via
 
 Bienvenue sur la documentation de l'**API Immobilière**.
 
-Cette API permet de gérer des biens immobiliers, des agents et des images via une architecture Controller → Service → Repository.
+Cette API permet de gérer des biens immobiliers, des agents et des images via une architecture Controller → Service → Repository. Elle s'accompagne également d'une interface UI administrative basée sur des templates Blade stockés dans `resources/views` (dashboard, formulaires, etc.).
 
 ## Prérequis serveurs
 
