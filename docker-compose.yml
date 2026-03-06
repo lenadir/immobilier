@@ -1,0 +1,130 @@
+services:
+  # ── PHP-FPM Application ─────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+    container_name: immobilier_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - vendor_data:/var/www/vendor
+      - storage_data:/var/www/storage
+      - bootstrap_cache:/var/www/bootstrap/cache
+      - ./docker/php/entrypoint.sh:/usr/local/bin/entrypoint.sh
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - immobilier
+
+  # ── Nginx Web Server ────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: immobilier_nginx
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - .:/var/www
+      - storage_data:/var/www/storage
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - immobilier
+
+  # ── MySQL 8.0 ──────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: immobilier_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_secret}
+      MYSQL_DATABASE: ${DB_DATABASE:-immobilier}
+      MYSQL_USER: ${DB_USERNAME:-immobilier}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "${DB_PORT_EXPOSED:-3306}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_secret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - immobilier
+
+  # ── Redis (cache + sessions) ────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: immobilier_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT_EXPOSED:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD:-redis_secret}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_secret}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - immobilier
+
+  # ── phpMyAdmin ─────────────────────────────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: immobilier_pma
+    restart: unless-stopped
+    ports:
+      - "${PMA_PORT:-8080}:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD:-root_secret}
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - immobilier
+
+  # ── Mailpit (SMTP catch-all for dev) ────────────────────────────────────────
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: immobilier_mail
+    restart: unless-stopped
+    ports:
+      - "${MAIL_PORT_UI:-8025}:8025"   # Web UI
+      - "1025:1025"                     # SMTP
+    networks:
+      - immobilier
+
+# ── Volumes ─────────────────────────────────────────────────────────────────
+volumes:
+  db_data:
+    driver: local
+  redis_data:
+    driver: local
+  vendor_data:
+    driver: local
+  storage_data:
+    driver: local
+  bootstrap_cache:
+    driver: local
+
+# ── Networks ─────────────────────────────────────────────────────────────────
+networks:
+  immobilier:
+    driver: bridge

@@ -1,0 +1,276 @@
+name: Images
+description: |-
+
+  Upload et gestion des photos associées aux biens immobiliers.
+  Formats acceptés : JPEG, PNG, WebP. Taille maximale : 5 Mo par image.
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: 'api/properties/{property_id}/images'
+    metadata:
+      groupName: Images
+      groupDescription: |-
+
+        Upload et gestion des photos associées aux biens immobiliers.
+        Formats acceptés : JPEG, PNG, WebP. Taille maximale : 5 Mo par image.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Uploader des images'
+      description: |-
+        Envoie une ou plusieurs photos (max 10) pour un bien immobilier.
+        La première image uploadée devient automatiquement la couverture si aucune n'existe.
+        Rôles autorisés : admin, agent (propriétaire du bien).
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {VOTRE_TOKEN_SANCTUM}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      property_id:
+        name: property_id
+        description: 'The ID of the property.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      property:
+        name: property
+        description: 'ID du bien.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      property_id: 1
+      property: 5
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      images:
+        name: images
+        description: 'Tableau de fichiers image (JPEG, PNG, WebP, max 5Mo chacun).'
+        required: true
+        example:
+          - null
+        type: 'file[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      is_cover:
+        name: is_cover
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      is_cover: false
+    fileParameters:
+      images:
+        - null
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+            "message": "2 image(s) uploadée(s) avec succès.",
+            "images": [
+              { "id": 8, "url": "http://localhost/storage/properties/5/photo1.jpg", "is_cover": true, "sort_order": 1 },
+              { "id": 9, "url": "http://localhost/storage/properties/5/photo2.jpg", "is_cover": false, "sort_order": 2 }
+            ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: '{ "message": "Action non autorisée sur ce bien." }'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: '{ "message": "Les données fournies sont invalides.", "errors": { "images.0": ["Les formats acceptés sont : JPEG, PNG, WebP."] } }'
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer akPhdfa1b36eE8Zc4D5v6Vg'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/images/{id}'
+    metadata:
+      groupName: Images
+      groupDescription: |-
+
+        Upload et gestion des photos associées aux biens immobiliers.
+        Formats acceptés : JPEG, PNG, WebP. Taille maximale : 5 Mo par image.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Supprimer une image'
+      description: |-
+        Supprime définitivement une image et son fichier physique du disque.
+        Rôles autorisés : admin, agent (propriétaire du bien).
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {VOTRE_TOKEN_SANCTUM}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the image.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      image:
+        name: image
+        description: "ID de l'image."
+        required: true
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+      image: 8
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{ "message": "Image supprimée avec succès." }'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: '{ "message": "Action non autorisée sur ce bien." }'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: '{ "message": "Ressource introuvable." }'
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer e13bDVv4h6fP6aa5cE8kgZd'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/images/{image_id}/cover'
+    metadata:
+      groupName: Images
+      groupDescription: |-
+
+        Upload et gestion des photos associées aux biens immobiliers.
+        Formats acceptés : JPEG, PNG, WebP. Taille maximale : 5 Mo par image.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Définir comme couverture'
+      description: |-
+        Définit une image comme photo principale (couverture) du bien.
+        L'ancienne couverture perd automatiquement ce statut.
+        Rôles autorisés : admin, agent (propriétaire du bien).
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {VOTRE_TOKEN_SANCTUM}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      image_id:
+        name: image_id
+        description: 'The ID of the image.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      image:
+        name: image
+        description: "ID de l'image."
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      image_id: 1
+      image: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{ "message": "Image définie comme couverture.", "image": { "id": 9, "is_cover": true } }'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: '{ "message": "Action non autorisée sur ce bien." }'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: '{ "message": "Ressource introuvable." }'
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 8abv5hVEZc46edag613PDfk'
+    controller: null
+    method: null
+    route: null
+    custom: []

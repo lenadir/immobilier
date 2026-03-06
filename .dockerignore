@@ -1,0 +1,44 @@
+# ── Version control ───────────────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ── Dev dependencies (installed fresh inside container) ──────────────────────
+vendor/
+node_modules/
+
+# ── Environment files (passed in at runtime) ─────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Laravel runtime directories (mounted or generated inside container) ───────
+storage/app/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+storage/logs/
+bootstrap/cache/
+
+# ── Tests ─────────────────────────────────────────────────────────────────────
+tests/
+phpunit.xml
+
+# ── Dev tooling ──────────────────────────────────────────────────────────────
+.editorconfig
+.phpunit.result.cache
+phpstan.neon
+psalm.xml
+_ide_helper*.php
+
+# ── Docker build files themselves (avoid re-layering) ────────────────────────
+Dockerfile
+docker-compose*.yml
+
+# ── Documentation ─────────────────────────────────────────────────────────────
+README.md
+public/docs/
+
+# ── OS artefacts ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

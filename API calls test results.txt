@@ -1,0 +1,35 @@
+[AUTH]
+  PASS  REGISTER new user (201)
+  PASS  REGISTER duplicate email (422)
+  PASS  LOGIN correct credentials (200)
+  PASS  LOGIN bad password (401)
+  PASS  GET /auth/me with valid token (200)
+  PASS  GET /auth/me unauthenticated (401)
+
+[PROPERTIES — public listing]
+  PASS  GET /properties unauthenticated (200)          ← total biens: 8
+  PASS  GET /properties with filters (200)
+  PASS  GET /properties search (200)
+
+[PROPERTIES — write]
+  PASS  POST /properties admin (201)                   ← auto-title: 'Appartement 3 pièces à Oran'
+  PASS  POST /properties agent (201)
+  PASS  POST /properties no auth (401)
+  PASS  GET /properties/{id} public (200)
+
+[ROLES & AUTHORIZATION]
+  PASS  GET /trashed admin (200)
+  PASS  GET /trashed agent (403)
+  PASS  GET /trashed unauthenticated (401)
+  PASS  GET /users admin (200)
+  PASS  GET /users agent (403)
+  PASS  DELETE /properties admin (200/204)
+
+[LOGOUT]
+  PASS  POST /auth/logout (200)
+  PASS  GET /auth/me after logout (401)
+───────────────────────────────────────────────────────
+  TOTAL 21 tests  |  PASS 21  |  FAIL 0
+
+
+****L'API est entièrement fonctionnelle. Chaque flux d'authentification, règle RBAC, route publique/protégée et cycle de vie du jeton Sanctum fonctionne correctement.
