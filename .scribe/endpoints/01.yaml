@@ -132,7 +132,7 @@ endpoints:
         name: city
         description: 'Must not be greater than 100 characters.'
         required: false
-        example: eyme
+        example: kfcinhwiqxsryw
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -142,7 +142,7 @@ endpoints:
         name: type
         description: ''
         required: false
-        example: appartement
+        example: villa
         type: string
         enumValues:
           - appartement
@@ -159,7 +159,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: disponible
+        example: vendu
         type: string
         enumValues:
           - disponible
@@ -172,7 +172,7 @@ endpoints:
         name: min_price
         description: 'Must be at least 0.'
         required: false
-        example: 7
+        example: 21
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -182,7 +182,7 @@ endpoints:
         name: max_price
         description: 'Must be at least 0.'
         required: false
-        example: 6
+        example: 40
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -192,7 +192,7 @@ endpoints:
         name: search
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: blizdbhvrwtwdxkplraoirrc
+        example: zwgilfjmlfzlmabnbvktqld
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -202,7 +202,7 @@ endpoints:
         name: per_page
         description: 'Must be at least 1. Must not be greater than 100.'
         required: false
-        example: 8
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -212,7 +212,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: rooms
+        example: surface
         type: string
         enumValues:
           - price
@@ -226,7 +226,7 @@ endpoints:
         name: sort_dir
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -235,15 +235,15 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      city: eyme
-      type: appartement
-      status: disponible
-      min_price: 7
-      max_price: 6
-      search: blizdbhvrwtwdxkplraoirrc
-      per_page: 8
-      sort_by: rooms
-      sort_dir: asc
+      city: kfcinhwiqxsryw
+      type: villa
+      status: vendu
+      min_price: 21
+      max_price: 40
+      search: zwgilfjmlfzlmabnbvktqld
+      per_page: 2
+      sort_by: surface
+      sort_dir: desc
     fileParameters: []
     responses:
       -
@@ -260,7 +260,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6Daa4egb613ZhPckfdE8vV5'
+      - 'Bearer 1ZD36ghfE46de8v5VkPaabc'
     controller: null
     method: null
     route: null
@@ -325,7 +325,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer VEhgdZD35vac61kf86be4aP'
+      - 'Bearer 3hc5fd8DZ616vbaegPa4VEk'
     controller: null
     method: null
     route: null
@@ -397,7 +397,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer hd8165Pg6D4k3EaaZvcfeVb'
+      - 'Bearer dDa1ZE83k6aPb4V5g6cefvh'
     controller: null
     method: null
     route: null
@@ -464,7 +464,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6baaD4c1g3ehv6dZkE8fPV5'
+      - 'Bearer 6DfbEk83vV45cadgZ6ah1Pe'
     controller: null
     method: null
     route: null
@@ -531,7 +531,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 6gcDv1d5hVfP8eaa4ZkE36b'
+      - 'Bearer ab1Da54dc63hvE68fVkgeZP'
     controller: null
     method: null
     route: null
@@ -686,7 +686,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Ekabgd8eZP3D66V54f1vhca'
+      - 'Bearer fE6aecVh63D81abPv4gkd5Z'
     controller: null
     method: null
     route: null
@@ -804,7 +804,7 @@ endpoints:
         name: address
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: nsgvsuhixhqnabtcyaakntbth
+        example: ohunxwdqrgaylmnzjwthbxz
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -837,7 +837,7 @@ endpoints:
       status: vendu
       rooms: 3
       surface: 120.0
-      address: nsgvsuhixhqnabtcyaakntbth
+      address: ohunxwdqrgaylmnzjwthbxz
       description: 'Bel appartement rénové.'
       is_published: true
     fileParameters: []
@@ -864,7 +864,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer DhZVc1Pgdaka3bE864f56ev'
+      - 'Bearer aae61v4E3VZ6gfb5cdD8Phk'
     controller: null
     method: null
     route: null
@@ -982,7 +982,7 @@ endpoints:
         name: address
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: fmvnwfkbooyqiwccv
+        example: hhwkqm
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1015,7 +1015,7 @@ endpoints:
       status: vendu
       rooms: 3
       surface: 120.0
-      address: fmvnwfkbooyqiwccv
+      address: hhwkqm
       description: 'Bel appartement rénové.'
       is_published: true
     fileParameters: []
@@ -1042,7 +1042,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer Pcb3vEk6e546g1DhVaZfd8a'
+      - 'Bearer 1hDb6vegaEPdcZka56f3V48'
     controller: null
     method: null
     route: null
@@ -1121,7 +1121,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer EePaba3D54f86Vc1gZ6vdhk'
+      - 'Bearer 8PZg6DVab16f3cEavkd5h4e'
     controller: null
     method: null
     route: null

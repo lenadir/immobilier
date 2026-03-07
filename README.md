@@ -50,39 +50,40 @@ php artisan serve
 
 ---
 
-## Using Docker
+## Utilisation avec Docker
 
-If you prefer to run the application in containers, a `Dockerfile` and `docker-compose.yml` are included in the
-repository. A simple way to build and start the services is:
+Si vous préférez exécuter l’application dans des conteneurs, un `Dockerfile` et un
+`docker-compose.yml` sont fournis dans le dépôt. Voici une façon simple de construire
+et lancer les services :
 
 ```bash
-# 1. build the PHP app image (uses the provided Dockerfile)
+# 1. construire l'image de l'application PHP (utilise le Dockerfile fourni)
 docker compose build app
 
-# 2. start everything (app, MySQL, nginx) in the background
+# 2. démarrer tous les services (app, MySQL, nginx) en arrière-plan
 docker compose up -d
 
-# 3. install PHP dependencies and generate key inside the app container
-#    (the `app` service is defined in docker-compose.yml)
+# 3. installer les dépendances PHP et générer la clé à l'intérieur du conteneur app
+#    (le service `app` est défini dans docker-compose.yml)
 docker compose exec app composer install
 docker compose exec app php artisan key:generate
 
-# 4. create the database and run migrations/seeders
-#    the MySQL container will be available as `mysql` on the network
-#    configure `.env` as described below, then:
+# 4. créer la base de données et exécuter migrations/seeders
+#    le conteneur MySQL sera accessible sous le nom `mysql` sur le réseau
+#    configurez `.env` comme indiqué ci-dessous, puis :
 docker compose exec app php artisan migrate --seed
 
 docker compose exec app php artisan storage:link
 
-# 5. the API will be reachable at http://localhost:8000/api
-#    nginx is pre‑configured in `docker/nginx/default.conf`
+# 5. l'API sera accessible via http://localhost:8000/api
+#    nginx est préconfiguré dans `docker/nginx/default.conf`
 
-# to stop and remove the containers:
+# pour arrêter et supprimer les conteneurs :
 docker compose down
 ```
 
-You can customize the `.env` variables before running the containers; the
-`app` service passes the environment through to the PHP process.
+Vous pouvez personnaliser les variables dans `.env` avant de lancer les
+conteneurs ; le service `app` transmet l'environnement au processus PHP.
 
 
 ## Variables d'environnement

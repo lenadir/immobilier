@@ -69,14 +69,14 @@ endpoints:
         name: is_cover
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      is_cover: true
+      is_cover: false
     fileParameters:
       images:
         - null
@@ -110,7 +110,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer b1VaEd5f8c6kgP6evahDZ43'
+      - 'Bearer fb36De1dhgvVca465k8EPaZ'
     controller: null
     method: null
     route: null
@@ -189,7 +189,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer ahd8P66e5Ef4D31kVbcgaZv'
+      - 'Bearer bge5VafdZ6vD4P6c1Eh38ak'
     controller: null
     method: null
     route: null
@@ -269,7 +269,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer f63Ph1EV86kZaaegbvDcd45'
+      - 'Bearer bha6ck6a5de31fVZDEP84gv'
     controller: null
     method: null
     route: null
