@@ -50,6 +50,41 @@ php artisan serve
 
 ---
 
+## Using Docker
+
+If you prefer to run the application in containers, a `Dockerfile` and `docker-compose.yml` are included in the
+repository. A simple way to build and start the services is:
+
+```bash
+# 1. build the PHP app image (uses the provided Dockerfile)
+docker compose build app
+
+# 2. start everything (app, MySQL, nginx) in the background
+docker compose up -d
+
+# 3. install PHP dependencies and generate key inside the app container
+#    (the `app` service is defined in docker-compose.yml)
+docker compose exec app composer install
+docker compose exec app php artisan key:generate
+
+# 4. create the database and run migrations/seeders
+#    the MySQL container will be available as `mysql` on the network
+#    configure `.env` as described below, then:
+docker compose exec app php artisan migrate --seed
+
+docker compose exec app php artisan storage:link
+
+# 5. the API will be reachable at http://localhost:8000/api
+#    nginx is pre‑configured in `docker/nginx/default.conf`
+
+# to stop and remove the containers:
+docker compose down
+```
+
+You can customize the `.env` variables before running the containers; the
+`app` service passes the environment through to the PHP process.
+
+
 ## Variables d'environnement
 
 Copiez `.env.example` en `.env` et adaptez les valeurs suivantes :
@@ -712,6 +747,14 @@ php artisan vendor:publish --tag=scribe-config
 # Générer la documentation statique
 php artisan scribe:generate
 ```
+
+> **Dans un environnement Docker** les mêmes commandes s'exécutent depuis le conteneur `app` :
+>
+> ```bash
+> docker compose exec app composer require knuckleswtf/scribe
+> docker compose exec app php artisan vendor:publish --tag=scribe-config
+> docker compose exec app php artisan scribe:generate
+> ```
 
 La documentation est écrite dans `public/docs/`.
 
