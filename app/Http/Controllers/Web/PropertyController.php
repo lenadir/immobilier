@@ -92,8 +92,9 @@ class PropertyController extends Controller
         $dto = CreatePropertyDTO::fromArray(Auth::id(), $data);
         $property = $this->propertyService->create($dto);
 
-        if (!empty($data['images'])) {
-            $this->imageService->upload($property, $data['images'], Auth::user());
+        $files = $request->file('images') ?? [];
+        if (!empty($files)) {
+            $this->imageService->upload($property, $files, Auth::user());
         }
 
         return redirect()
@@ -134,8 +135,9 @@ class PropertyController extends Controller
         $dto = UpdatePropertyDTO::fromArray($data);
         $updated = $this->propertyService->update($property, $dto, Auth::user());
 
-        if (!empty($data['images'])) {
-            $this->imageService->upload($updated, $data['images'], Auth::user());
+        $files = $request->file('images') ?? [];
+        if (!empty($files)) {
+            $this->imageService->upload($updated, $files, Auth::user());
         }
 
         return redirect()

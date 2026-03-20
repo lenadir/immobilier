@@ -28,7 +28,7 @@ class ImageRepository implements ImageRepositoryInterface
             'original_name' => $file->getClientOriginalName(),
             'size'          => $file->getSize(),
             'mime_type'     => $file->getMimeType(),
-            'is_cover'      => $isCover || $property->images()->count() === 0,
+            'is_cover'      => $isCover,
             'sort_order'    => $sortOrder,
         ]);
     }

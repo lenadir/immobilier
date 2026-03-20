@@ -45,9 +45,9 @@ class UserController extends Controller
         $this->adminOnly();
 
         $user->loadCount('properties');
-        $properties = $user->properties()->latest()->limit(5)->get();
+        $recentProperties = $user->properties()->latest()->limit(5)->get();
 
-        return view('users.show', compact('user', 'properties'));
+        return view('users.show', compact('user', 'recentProperties'));
     }
 
     public function edit(User $user)

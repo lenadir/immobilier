@@ -3,13 +3,19 @@
 
 <div class="row g-3">
 
-    {{-- Title --}}
+    {{-- Title — auto-generated, never submitted by the user --}}
     <div class="col-12">
-        <label class="form-label fw-semibold" for="title">Titre <span class="text-danger">*</span></label>
-        <input type="text" id="title" name="title"
-               class="form-control @error('title') is-invalid @enderror"
-               value="{{ old('title', $p?->title) }}" required>
-        @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        <label class="form-label fw-semibold">Titre</label>
+        @if($p?->title)
+            {{-- Edit mode: display current auto-generated title as read-only --}}
+            <p class="form-control-plaintext fw-semibold mb-0">{{ $p->title }}</p>
+            <small class="text-muted">Généré automatiquement à partir du type, des pièces, de la ville et du statut.</small>
+        @else
+            {{-- Create mode: inform the user --}}
+            <p class="form-control-plaintext text-muted mb-0 fst-italic">
+                <i class="bi bi-magic me-1"></i>Généré automatiquement lors de la création.
+            </p>
+        @endif
     </div>
 
     {{-- Type + Status --}}
@@ -60,7 +66,7 @@
     {{-- City + Address --}}
     <div class="col-sm-4">
         <label class="form-label fw-semibold" for="city">Ville</label>
-        <input type="text" id="city" name="city"
+        <input type="text" id="city" name="city" required
                class="form-control @error('city') is-invalid @enderror"
                value="{{ old('city', $p?->city) }}">
         @error('city')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -127,16 +133,51 @@
 
 </div>
 
-{{-- ── JS live preview ─────────────────────────────────────────────────────── --}}
+{{-- ── JS live preview (accumulating) ─────────────────────────────────────── --}}
 <script>
 (function () {
     const input    = document.getElementById('images');
     const dropZone = document.getElementById('drop-zone');
     const preview  = document.getElementById('new-preview');
+    const MAX      = 10;
 
-    function renderPreviews(files) {
+    // Single persistent accumulator — survives across multiple picks/drops
+    let accumulator = new DataTransfer();
+
+    /**
+     * Merge an array of File objects into the accumulator, skipping duplicates
+     * (matched by name + size), then sync input.files and refresh the preview.
+     */
+    function addFiles(newFiles) {
+        const existing = new Set(
+            Array.from(accumulator.files).map(f => f.name + '|' + f.size)
+        );
+        Array.from(newFiles)
+            .filter(f => f.type.startsWith('image/'))
+            .filter(f => !existing.has(f.name + '|' + f.size))
+            .forEach(f => {
+                if (accumulator.files.length < MAX) {
+                    accumulator.items.add(f);
+                }
+            });
+        input.files = accumulator.files;
+        renderPreviews();
+    }
+
+    /** Remove one file by index, rebuild accumulator, sync and refresh. */
+    function removeFile(index) {
+        const next = new DataTransfer();
+        Array.from(accumulator.files).forEach((f, i) => {
+            if (i !== index) next.items.add(f);
+        });
+        accumulator = next;
+        input.files = accumulator.files;
+        renderPreviews();
+    }
+
+    function renderPreviews() {
         preview.innerHTML = '';
-        Array.from(files).forEach((file, i) => {
+        Array.from(accumulator.files).forEach((file, i) => {
             const reader = new FileReader();
             reader.onload = e => {
                 const col = document.createElement('div');
@@ -149,6 +190,9 @@
                     <div class="position-relative rounded overflow-hidden border" style="aspect-ratio:4/3">
                         <img src="${e.target.result}" class="w-100 h-100" style="object-fit:cover" alt="">
                         ${coverBadge}
+                        <button type="button" data-idx="${i}"
+                                class="btn-remove-img position-absolute top-0 end-0 m-1 btn btn-sm btn-danger p-0 lh-1"
+                                style="width:22px;height:22px;font-size:.75rem" title="Retirer">✕</button>
                         <div class="position-absolute bottom-0 start-0 end-0 px-2 py-1"
                              style="background:rgba(0,0,0,.45);font-size:.7rem;color:#fff;
                                     white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
@@ -156,12 +200,37 @@
                         </div>
                     </div>`;
                 preview.appendChild(col);
+
+                // Attach remove handler after element is in DOM
+                col.querySelector('.btn-remove-img').addEventListener('click', function () {
+                    removeFile(parseInt(this.dataset.idx));
+                });
             };
             reader.readAsDataURL(file);
         });
+
+        // Update counter hint on the drop-zone
+        const hint = dropZone.querySelector('.img-count-hint');
+        if (accumulator.files.length > 0) {
+            const txt = `${accumulator.files.length} / ${MAX} image(s) sélectionnée(s)`;
+            if (hint) { hint.textContent = txt; }
+            else {
+                const span = document.createElement('span');
+                span.className = 'img-count-hint small text-primary mt-1';
+                span.textContent = txt;
+                dropZone.appendChild(span);
+            }
+        } else if (hint) {
+            hint.remove();
+        }
     }
 
-    input.addEventListener('change', () => renderPreviews(input.files));
+    // File picker: accumulate, don't replace
+    input.addEventListener('change', () => {
+        addFiles(input.files);
+        // Reset the native input so the same file can be re-added after removal
+        input.value = '';
+    });
 
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
@@ -176,12 +245,7 @@
         e.preventDefault();
         dropZone.style.background = '';
         dropZone.style.borderColor = '';
-        const dt = new DataTransfer();
-        Array.from(e.dataTransfer.files)
-            .filter(f => f.type.startsWith('image/'))
-            .forEach(f => dt.items.add(f));
-        input.files = dt.files;
-        renderPreviews(input.files);
+        addFiles(e.dataTransfer.files);
     });
 })();
 </script>
