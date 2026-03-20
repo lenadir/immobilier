@@ -171,7 +171,9 @@
             if (i !== index) next.items.add(f);
         });
         accumulator = next;
-        input.files = accumulator.files;
+        // Clear the native input so the user can re-pick this file if needed.
+        // The submit handler will re-sync accumulator → input.files on send.
+        input.value = '';
         renderPreviews();
     }
 
@@ -225,12 +227,21 @@
         }
     }
 
-    // File picker: accumulate, don't replace
+    // File picker: accumulate new picks without discarding previous ones.
+    // Do NOT reset input.value here — that would clear input.files and cause
+    // files to be missing from the POST body.
     input.addEventListener('change', () => {
         addFiles(input.files);
-        // Reset the native input so the same file can be re-added after removal
-        input.value = '';
     });
+
+    // Re-sync accumulator → input.files just before submission so that
+    // the input.value = '' reset above never causes files to be lost.
+    const form = input.closest('form');
+    if (form) {
+        form.addEventListener('submit', function () {
+            input.files = accumulator.files;
+        });
+    }
 
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
